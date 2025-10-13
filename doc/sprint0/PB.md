@@ -1,0 +1,22 @@
+Below is a list of the most important user stories for YU Circle:
+- As a student, I want to be able to signup with an account, so that I can access the app.
+- As a student, I want to be able to verify that I go to York University, by email, so that people that do not attend the university cannot join.
+- As a student, I want to be able to log in using my account username and password so that I can access the app.
+- As a student, I want to be able to log out in case the device I am using is not mine for security purposes.
+- As a student, I want the ability to reset my password in case I forget it.
+- As a student, I want the ability to upload my schedule, so that I can find other students who are on campus at the same time as me.
+- As a student, I want to edit my schedule so that it is up-to-date (e.g. changes across the semesters).
+- As a student, I want to be able to create a user profile, which includes my interests, name, etc., so that other people can find out more about me.
+- As a student, I want to be able to get notified when a new event or when someone messages me, so that I can respond in a prompt manner without having to guess and check.
+- As a student, I want to be able to find students on campus based on my schedule I uploaded so that I can meet new friends.
+- As a student, I want the ability to send messages to other students on the platform to be able to exchange contact information, etc.
+- As a student, I want to edit/delete messages to others so that I can correct any mistakes I make in my communication.
+- As a student, I would like a resource board so that I can view all upcoming events and resources at York University.
+- As a student, I want to be able to filter events on the access board so I have information more catered to my interests.
+- As a club executive, I want to make a post so that users are aware of the events happening in my club. As a general student, I would like to make a post (like Instagram), so that I can find friends based on my interests.
+- As a student, I want the ability to edit or delete a post in case I make a mistake or if I change my mind about it.
+- As a student, I want to be able to view individual posts that other users have created, so that I can message and interact with them.
+- As a club executive, I want to be able to create student groups, so that other students can join and receive notifications about the club.
+- As a student, I want to join a student group and receive updates and notifications from the group so that I can more easily access details about events and members within a club/team.
+- As a club president or executive, I want to be able to see the frequency of when students don’t have class, so that I can plan events accordingly.
+- As a student, I want the ability to enable dark/light mode, in case I am sensitive to light or vice versa.
