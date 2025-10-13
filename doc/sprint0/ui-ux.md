@@ -1,0 +1,1 @@
+A basic interface has been designed on Figma and can be accessed here: https://www.figma.com/design/zG3TMFktshPq7vH8E7Dx7z/YU-Circle?node-id=0-1&t=TUTAB7KELCn3i1fC-1
