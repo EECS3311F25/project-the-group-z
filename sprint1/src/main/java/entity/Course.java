@@ -1,3 +1,4 @@
+package entity;
 
 public class Course {
     String courseName;
