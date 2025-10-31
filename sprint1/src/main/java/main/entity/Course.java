@@ -1,4 +1,4 @@
-package entity;
+package main.entity;
 
 public class Course {
     String courseName;
