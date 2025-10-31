@@ -5,7 +5,7 @@ import Sidebar from './Components/Sidebar'
 import Register from "./pages/Register"
 import Login from "./pages/Login"
 import { BrowserRouter, Routes, Route } from "react-router-dom"
-
+import Landing from "./Pages/Landing"
 
 
 createRoot(document.getElementById('root')).render(
@@ -15,6 +15,7 @@ createRoot(document.getElementById('root')).render(
         <Sidebar />
         <div className="flex-1">
           <Routes>
+            <Route path="/" element={<Landing />} />
             <Route path="/register" element={<Register />} />
             <Route path="/login" element={<Login />} />
           </Routes>
