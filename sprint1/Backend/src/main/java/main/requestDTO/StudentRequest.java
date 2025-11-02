@@ -1,4 +1,14 @@
+package main.requestDTO;
+
 import jakarta.validation.constraints.*;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import lombok.AllArgsConstructor;
+
+
+@Data // Automatically adds getters, setters, toString, equals, hashCode
+@NoArgsConstructor // Adds a no-argument constructor (required by JPA)
+@AllArgsConstructor //  Adds a constructor with all fields // Automatically create arguments constructor.
 
 public class StudentRequest {
     @NotBlank(message = "Username is required.")
