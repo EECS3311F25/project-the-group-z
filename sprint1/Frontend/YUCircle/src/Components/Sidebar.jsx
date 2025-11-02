@@ -26,6 +26,8 @@ export default function Sidebar() {
                 <p className="pb-2 pl-4 pt-2 border-b border-white hover:bg-(--yorku-blue) transition-colors duration-300 cursor-pointer">Resource Board</p>
                 <p className="pb-2 pl-4 pt-2 border-b border-white hover:bg-(--yorku-blue) transition-colors duration-300 cursor-pointer">Find Friends</p>
                 <p className="pb-2 pl-4 pt-2 border-b border-white hover:bg-(--yorku-blue) transition-colors duration-300 cursor-pointer">Upload Schedule</p>
+				<Link to="/make-post" className="pb-2 pl-4 pt-2 border-b border-white hover:bg-(--yorku-blue) transition-colors duration-300 cursor-pointer"> Make a Post</Link>
+
         </div>
     </div>
      {isOpen && (

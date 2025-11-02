@@ -14,6 +14,7 @@ public class Post {
     private String content;
     private String imageUrl;
     private LocalDateTime timestamp = LocalDateTime.now();
+    
 
     public Post() {}
 

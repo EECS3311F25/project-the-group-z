@@ -13,12 +13,10 @@ public class PostCommandService {
     @Autowired
     private PostRepo postRepo;
 
-    //create a new post
     public Post createPost(Post post) {
         return postRepo.save(post);
     }
 
-    //get all posts
     public List<Post> getAllPosts() {
         return postRepo.findAll();
     }
