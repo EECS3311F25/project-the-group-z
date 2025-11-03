@@ -26,7 +26,7 @@ public class Student {
 
     private String email;
 
-    private boolean isVerified =false;
+    private boolean isVerified;
 
     private String verificationToken;
 }

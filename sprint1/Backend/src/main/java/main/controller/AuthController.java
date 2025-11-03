@@ -11,37 +11,38 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
+
+import java.util.Map;
 
 
 @RestController
-public class StudentController {
+public class AuthController {
 
     private final StudentCommandService commandService;
     private final StudentRepo studentRepo;
 
     @Autowired // Automatically inject command service (DP)
-    public StudentController(StudentCommandService commandService, StudentRepo studentRepo) {
+    public AuthController(StudentCommandService commandService, StudentRepo studentRepo) {
         this.commandService = commandService;
         this.studentRepo = studentRepo;
     }
 
 
-    @PostMapping("/student/register")
+    @PostMapping("/auth/register")
     public ResponseEntity<Student> registerStudent(@Valid @RequestBody StudentRequest request) {
         Student created = commandService.registerStudent(request);
         return ResponseEntity.status(HttpStatus.CREATED).body(created);
     }
 
-    @GetMapping("/student/verify")
+    @GetMapping("/auth/verify")
     public ResponseEntity<?> verifyEmail(@RequestParam("token") String token) {
-        Student student = studentRepo.findByVerificationToken(token)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Invalid verification token."));
 
-        student.setVerified(true);
-        student.setVerificationToken(null);
-        studentRepo.save(student);
+        if (commandService.verifyStudent(token)) {
+            return ResponseEntity.ok(Map.of("message", "Email verified successfully!"));
+        }
+        return ResponseEntity.badRequest().build();
 
-        return ResponseEntity.ok(Map.of("message", "Email verified successfully!"));
     }
 
 

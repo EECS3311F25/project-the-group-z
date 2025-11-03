@@ -20,7 +20,7 @@ export default function Sidebar() {
 
         <div className={`${isOpen ? 'translate-x-0' : '-translate-x-full'} xl:translate-x-0 fixed xl:static h-screen w-64 xl:w-1/7 text-white transition-transform duration-300 ease-in-out z-40 bg-(--yorku-red)`}>        
         <div className="flex flex-col">
-                <Link to="/" className="py-10 border-b border-white pb-2 pl-4 pb-10">Welcome, Bob123</Link>
+                <Link to="/" className="py-10 border-b border-white pb-2 pl-4 pb-10">Welcome, new user!</Link>
                 <Link to="/register" className="pb-2 pl-4 pt-2 border-b border-white hover:bg-(--yorku-blue) transition-colors duration-300 cursor-pointer">Register</Link>
                 <p className="pb-2 pl-4 pt-2 border-b border-white hover:bg-(--yorku-blue) transition-colors duration-300 cursor-pointer">Login</p>
                 <p className="pb-2 pl-4 pt-2 border-b border-white hover:bg-(--yorku-blue) transition-colors duration-300 cursor-pointer">Resource Board</p>

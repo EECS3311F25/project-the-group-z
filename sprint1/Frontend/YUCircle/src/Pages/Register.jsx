@@ -50,6 +50,9 @@ export default function Register() {
         className="bg-(--yorku-red) max-w-md w-full p-10 pb-20 pt-15"
       >
         <h1 className="text-center">YUCircle</h1>
+        {isPostSuccess && <p className="text-center pt-1">Check your email for verification.</p>}
+        {!isPostSuccess && (
+            <>
         <div className="flex flex-col gap-5 mt-2">
           <h2 className="text-center font-bold">Register</h2>
           <p className="text-xs">
@@ -145,14 +148,13 @@ export default function Register() {
             Verify Email
           </button>
         </div>
-
-        {isPostSuccess && (
-          <p className="text-green-400 text-center mt-4">Registration success!</p>
+            </>
         )}
         {errorMessage && (
           <p className="text-white text-center mt-4">{errorMessage}</p>
         )}
       </form>
     </div>
+    
   );
 }

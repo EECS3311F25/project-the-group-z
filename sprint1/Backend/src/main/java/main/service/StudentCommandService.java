@@ -9,6 +9,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.server.ResponseStatusException;
+import java.util.UUID;
 
 @Service
 public class StudentCommandService {
@@ -35,20 +36,34 @@ public class StudentCommandService {
             throw new ResponseStatusException(HttpStatus.CONFLICT, "Email already registered.");
         }
 
+        String token = UUID.randomUUID().toString();
+
         Student student = new Student();
         student.setUsername(request.getUsername());
         student.setEmail(request.getEmail());
         student.setPassword(passwordEncoder.encode(request.getPassword()));
         student.setFirstName(request.getFirstName());
         student.setLastName(request.getLastName());
+        student.setVerificationToken(token);
 
-        String link = "http://localhost:8080/student/verify?token=" + student.getVerificationToken();
+        String link = "http://localhost:8080/auth/verify?token=" + student.getVerificationToken();
         emailService.sendEmail(
           student.getEmail(),
           "Verify your YUCircle account",
           "Click to verify your account:" + link
         );
 
+
         return studentRepo.save(student);
+    }
+
+    public boolean verifyStudent(String token) {
+        Student student = studentRepo.findByVerificationToken(token)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Invalid verification token."));
+
+        student.setVerified(true);
+        student.setVerificationToken(null);
+        studentRepo.save(student);
+        return true;
     }
 }
