@@ -25,12 +25,12 @@ public class StudentCommandService {
 
         // If username already exists.
         if (studentRepo.existsByUsername(request.getUsername())) {
-            throw new ResponseStatusException(HttpStatus.CONFLICT, "Username already taken");
+            throw new ResponseStatusException(HttpStatus.CONFLICT, "Username already taken.");
         }
 
         // If email already exists.
         if (studentRepo.existsByEmail(request.getEmail())) {
-            throw new ResponseStatusException(HttpStatus.CONFLICT, "Email already registered");
+            throw new ResponseStatusException(HttpStatus.CONFLICT, "Email already registered.");
         }
 
         Student student = new Student();

@@ -1,5 +1,6 @@
 package main.controller;
 
+import jakarta.validation.Valid;
 import main.entity.Student;
 import main.service.*;
 import main.requestDTO.StudentRequest;
@@ -24,8 +25,8 @@ public class StudentController {
     }
 
 
-    @PostMapping("/student/Register")
-    public ResponseEntity<Student> registerStudent(@RequestBody StudentRequest request) {
+    @PostMapping("/student/register")
+    public ResponseEntity<Student> registerStudent(@Valid @RequestBody StudentRequest request) {
         Student created = commandService.registerStudent(request);
         return ResponseEntity.status(HttpStatus.CREATED).body(created);
     }
