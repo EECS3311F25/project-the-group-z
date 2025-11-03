@@ -6,6 +6,8 @@ import Register from "./pages/Register"
 import Login from "./pages/Login"
 import { BrowserRouter, Routes, Route } from "react-router-dom"
 import Landing from "./Pages/Landing"
+import UserProfile from "./Pages/UserProfile";
+
 
 
 createRoot(document.getElementById('root')).render(
@@ -18,6 +20,7 @@ createRoot(document.getElementById('root')).render(
             <Route path="/" element={<Landing />} />
             <Route path="/register" element={<Register />} />
             <Route path="/login" element={<Login />} />
+            <Route path="/profile" element={<UserProfile />} />  
           </Routes>
         </div>
       </div>
