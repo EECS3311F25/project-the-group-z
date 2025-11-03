@@ -14,11 +14,13 @@ import org.springframework.web.server.ResponseStatusException;
 public class StudentCommandService {
     private final StudentRepo studentRepo;
     private final BCryptPasswordEncoder passwordEncoder;
+    private final EmailService emailService;
 
     @Autowired
-    public StudentCommandService(StudentRepo studentRepo) {
+    public StudentCommandService(StudentRepo studentRepo, EmailService emailService) {
         this.studentRepo = studentRepo;
         this.passwordEncoder = new BCryptPasswordEncoder();
+        this.emailService = emailService;
     }
 
     public Student registerStudent(StudentRequest request) {
@@ -39,6 +41,13 @@ public class StudentCommandService {
         student.setPassword(passwordEncoder.encode(request.getPassword()));
         student.setFirstName(request.getFirstName());
         student.setLastName(request.getLastName());
+
+        String link = "http://localhost:8080/student/verify?token=" + student.getVerificationToken();
+        emailService.sendEmail(
+          student.getEmail(),
+          "Verify your YUCircle account",
+          "Click to verify your account:" + link
+        );
 
         return studentRepo.save(student);
     }

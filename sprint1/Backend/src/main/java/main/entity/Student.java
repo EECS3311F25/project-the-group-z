@@ -25,4 +25,8 @@ public class Student {
     private String lastName;
 
     private String email;
+
+    private boolean isVerified =false;
+
+    private String verificationToken;
 }
