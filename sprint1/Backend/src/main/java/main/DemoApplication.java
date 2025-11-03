@@ -24,25 +24,6 @@ public class DemoApplication {
         return String.format("Hello, %s!", name);
     }
 
-    @Bean
-    CommandLineRunner init(StudentRepo repo) {
-        return args -> {
-            repo.deleteAll();
-
-            // Create test student
-            Student s = new Student();
-            s.setFirstName("Test");
-            s.setLastName("Student");
-            s.setUserName("test123");
-            s.setEmail("test123@yorku.ca");
-            s.setMajor("Computer Science");
-            repo.save(s);
-
-            System.out.println("Test student added: " + s.getUserName());
-        };
-    }
-
-
     @GetMapping("/test-student")
     public Student testStudent(StudentRepo repo) {
         return repo.findAll().stream().findFirst().orElse(null);
