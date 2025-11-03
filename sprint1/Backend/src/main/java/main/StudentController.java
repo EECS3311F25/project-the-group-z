@@ -13,14 +13,11 @@ import main.repository.StudentRepo;
 
 @SpringBootApplication
 @RestController
-public class DemoApplication {
+public class StudentController {
 
-    public static void main(String[] args) {
-        SpringApplication.run(DemoApplication.class, args);
-    }
 
-    @GetMapping("/hello")
-    public String hello(@RequestParam(value = "name", defaultValue = "World") String name) {
+    @GetMapping("/student/Register")
+    public String hello(@RequestParam StudentRequest request) {
         return String.format("Hello, %s!", name);
     }
 
