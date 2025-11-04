@@ -34,6 +34,7 @@ export default function Register() {
 
         else {
         localStorage.setItem("token", data.token); 
+        localStorage.setItem("username", data.username);
         window.dispatchEvent(new Event("localStorageChange"));
         navigate("/profile");
         }

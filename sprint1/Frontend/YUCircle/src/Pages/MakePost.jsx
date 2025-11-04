@@ -19,7 +19,7 @@ export default function MakePost() {
   async function onSubmit(e) {
     e.preventDefault();
     post("create", {
-      username: formData.username,
+      username: localStorage.getItem("username"),
       content: formData.content,
       imageUrl: formData.imageUrl,
     })
@@ -49,14 +49,6 @@ export default function MakePost() {
     <div className="p-6 text-black">
       <h1 className="text-2xl font-bold mb-4">Create a Post</h1>
       <form onSubmit={onSubmit} className="flex flex-col gap-4 max-w-md">
-        <input
-          name="username"
-          type="text"
-          placeholder="Username"
-          value={formData.username}
-          onChange={handleChange}
-          className="border p-2 rounded"
-        />
         <textarea
           name="content"
           placeholder="Write your post..."

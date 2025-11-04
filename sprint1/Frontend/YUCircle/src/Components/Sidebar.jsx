@@ -49,7 +49,7 @@ export default function Sidebar() {
       >
         <div className="flex flex-col">
           <Link to="/" className="py-10 border-b border-white pb-2 pl-4 pb-10">
-            Welcome, {isLoggedIn ? "user!" : "new user!"}
+            Welcome {isLoggedIn ? "back, " + localStorage.getItem("username") : "new user!"}
           </Link>
 
           {/* Show Register/Login only when user NOT logged in */}

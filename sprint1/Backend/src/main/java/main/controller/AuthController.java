@@ -50,7 +50,7 @@ public class AuthController {
     public ResponseEntity<?> authenticate(@Valid @RequestBody AuthRequest request) {
         try {
             String token = commandService.authenticateLogin(request.getUsername(), request.getPassword());
-            return ResponseEntity.ok(new AuthResponse(token));
+            return ResponseEntity.ok(new AuthResponse(token, request.getUsername()));
         } catch (BadCredentialsException ex) {
             Map<String, Object> body = new HashMap<>();
             body.put("error", "Unauthorized");

@@ -11,6 +11,8 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
+
+import java.util.Optional;
 import java.util.UUID;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.core.Authentication;
@@ -79,6 +81,14 @@ public class AuthCommandService {
     }
 
     public String authenticateLogin(String username, String password) {
+        Optional<Student> studentOpt = studentRepo.findByUsername(username);
+
+        if (studentOpt.isPresent()) {
+            boolean verified = studentOpt.get().isVerified();
+            if (!verified) {
+                throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Please verify your email.");
+            }
+        }
         Authentication authentication = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(username, password)
         );

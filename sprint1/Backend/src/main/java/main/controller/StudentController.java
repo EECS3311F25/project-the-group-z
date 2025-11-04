@@ -8,7 +8,10 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 import org.springframework.http.HttpStatus;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/students")
@@ -49,10 +52,21 @@ public class StudentController {
 
     // Finding user via username
     @GetMapping("/by-username/{username}")
-    public Student getByUserName(@PathVariable String username) {
-        return service.getStudentByUsername(username)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Student not found"));
+    public ResponseEntity<?> getByUserName(@PathVariable String username) {
+        Optional<Student> student = service.getStudentByUsername(username);
+
+        if (student.isPresent()) {
+            return ResponseEntity.ok(student.get());
+        } else {
+            Map<String, Object> body = new HashMap<>();
+            body.put("error", "Not Found");
+            body.put("message", "Student with username '" + username + "' not found");
+            body.put("errors", new HashMap<>());
+            body.put("status", HttpStatus.NOT_FOUND.value());
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(body);
+        }
     }
+
 
     // Updating info
     @PutMapping("/{id}")

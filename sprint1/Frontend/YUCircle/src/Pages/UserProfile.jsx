@@ -1,34 +1,26 @@
 import { useState, useEffect } from "react";
+import useFetch from "../Hooks/useFetch";
 
 export default function UserProfile() {
-  // Hardcoded test student
-  const testStudent = {
-    studentNumber: 7,
-    firstName: "Test",
-    lastName: "Student",
-    userName: "test123",
-    email: "test123@yorku.ca",
-    major: "Computer Science",
-    bio: "This is a test bio."
-  };
+
+  const { get, post } = useFetch("http://localhost:8080/api/students/by-username/");
 
   const [student, setStudent] = useState(null);
-  const [loading, setLoading] = useState(true);
+  //const [loading, setLoading] = useState(true);
   const [editingBio, setEditingBio] = useState(false);
   const [bio, setBio] = useState("");
   const [savingBio, setSavingBio] = useState(false);
   const [bioMessage, setBioMessage] = useState(null);
 
   useEffect(() => {
-    // Simulate API fetch
-    setTimeout(() => {
-      setStudent(testStudent);
-      setBio(testStudent.bio ?? "");
-      setLoading(false);
-    }, 200); // slight delay for realism
+    const username = localStorage.getItem("username");
+    get(username).then(data => {
+      setStudent(data);
+    })
   }, []);
 
-  if (loading) return <p className="text-red-500 p-4">Loading...</p>;
+
+  //if (loading) return <p className="text-red-500 p-4">Loading...</p>;
   if (!student) return <p className="text-white p-4">No student data</p>;
 
   function handleSaveBio() {
@@ -42,6 +34,7 @@ export default function UserProfile() {
     setSavingBio(false);
     setTimeout(() => setBioMessage(null), 3000);
   }
+  
 
   return (
     <div className="min-h-screen flex gap-6 p-8 text-white">
@@ -49,7 +42,7 @@ export default function UserProfile() {
         <div className="p-6">
           <h2 className="text-2xl font-bold mb-2">Your Profile</h2>
           <p className="text-sm opacity-90 mb-4">
-            Welcome back, <span className="font-semibold">{student.userName}</span>
+            Welcome back, <span className="font-semibold">{student.firstName + " " + student.lastName}</span>
           </p>
 
           <div className="space-y-2 mb-4">
@@ -67,7 +60,7 @@ export default function UserProfile() {
             </div>
             <div>
               <div className="text-xs text-white/80">Major</div>
-              <div className="font-medium">{student.major}</div>
+              <div className="font-medium">{student.major === null ? "We don't know your major yet." : student.major}</div>
             </div>
           </div>
 
