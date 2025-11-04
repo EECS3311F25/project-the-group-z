@@ -2,7 +2,7 @@ package main.controller;
 
 import main.dto.StudentDTO;
 import main.entity.Student;
-import main.services.StudentService;
+import main.service.StudentCommandService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
@@ -15,9 +15,9 @@ import java.util.List;
 @CrossOrigin(origins = "http://localhost:5173")
 public class StudentController {
 
-    private final StudentService service;
+    private final StudentCommandService service;
 
-    public StudentController(StudentService service) {
+    public StudentController(StudentCommandService service) {
         this.service = service;
     }
 
@@ -45,12 +45,6 @@ public class StudentController {
     @GetMapping
     public List<Student> all() {
         return service.getAllStudents();
-    }
-
-    // Create student
-    @PostMapping
-    public Student create(@RequestBody Student s) {
-        return service.createStudent(s);
     }
 
     // Finding user via username

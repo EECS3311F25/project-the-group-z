@@ -1,80 +1,79 @@
 package main.service;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import main.requestDTO.StudentRequest;
+import main.dto.StudentDTO;
 import main.entity.Student;
 import main.repository.StudentRepo;
-import org.springframework.http.HttpStatus;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.server.ResponseStatusException;
-import java.util.UUID;
-import main.entity.Student;
-import main.repository.StudentRepo;
-import main.requestDTO.StudentRequest;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.stereotype.Service;
+import org.springframework.http.HttpStatus;
+
+import java.util.List;
+import java.util.Optional;
 
 @Service
 public class StudentCommandService {
 
-    private final StudentRepo studentRepo;
-    private final BCryptPasswordEncoder passwordEncoder;
-    private final EmailService emailService;
+    private final StudentRepo repo;
 
-    @Autowired
-    public StudentCommandService(StudentRepo studentRepo, EmailService emailService) {
-        this.studentRepo = studentRepo;
-        this.passwordEncoder = new BCryptPasswordEncoder();
-        this.emailService = emailService;
+    public StudentCommandService(StudentRepo repo) {
+        this.repo = repo;
     }
 
-    public Student registerStudent(StudentRequest request) {
+    // Convert to sidebar DTO (minimal data)
+    public StudentDTO toSidebar(Long id) {
+        Student s = repo.findById(id)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Student not found"));
 
-        // If username already exists.
-        if (studentRepo.existsByUsername(request.getUsername())) {
-            throw new ResponseStatusException(HttpStatus.CONFLICT, "Username already taken.");
-        }
-
-        // If email already exists.
-        if (studentRepo.existsByEmail(request.getEmail())) {
-            throw new ResponseStatusException(HttpStatus.CONFLICT, "Email already registered.");
-        }
-
-        String token = UUID.randomUUID().toString();
-
-        Student student = new Student();
-        student.setUsername(request.getUsername());
-        student.setEmail(request.getEmail());
-        student.setPassword(passwordEncoder.encode(request.getPassword()));
-        student.setFirstName(request.getFirstName());
-        student.setLastName(request.getLastName());
-        student.setVerificationToken(token);
-
-        String link = "http://localhost:8080/auth/verify?token=" + student.getVerificationToken();
-        emailService.sendEmail(
-          student.getEmail(),
-          "Verify your YUCircle account",
-          "Click to verify your account:" + link
+        return new StudentDTO(
+                s.getStudentNumber(),
+                s.getFirstName(),
+                s.getLastName(),
+                s.getUsername(),
+                s.getEmail(),
+                s.getMajor()
         );
-
-
-        studentRepo.save(student);
-        return "Student registered successfully!";
     }
 
-    public boolean verifyStudent(String token) {
-        Student student = studentRepo.findByVerificationToken(token)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Invalid verification token."));
+    // Retrieve student by ID
+    public Optional<Student> getStudentById(Long id) {
+        return repo.findById(id);
+    }
 
-        student.setVerified(true);
-        student.setVerificationToken(null);
-        studentRepo.save(student);
-        return true;
+    // Retrieve all students
+    public List<Student> getAllStudents() {
+        return repo.findAll();
+    }
+
+    // Create a student
+    public Student createStudent(Student s) {
+        return repo.save(s);
+    }
+
+    // Delete a student
+    public void deleteStudent(Long id) {
+        if (!repo.existsById(id)) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Student not found");
+        }
+        repo.deleteById(id);
+    }
+
+    // Find by username
+    public Optional<Student> getStudentByUsername(String username) {
+        return repo.findByUsername(username);
+    }
+
+    // Update student fields (partial update)
+    public Student updateStudent(Long id, Student changes) {
+        Student s = repo.findById(id)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Student not found"));
+
+        if (changes.getUsername() != null) s.setUsername(changes.getUsername());
+        if (changes.getFirstName() != null) s.setFirstName(changes.getFirstName());
+        if (changes.getLastName() != null) s.setLastName(changes.getLastName());
+        if (changes.getEmail() != null) s.setEmail(changes.getEmail());
+        if (changes.getMajor() != null) s.setMajor(changes.getMajor());
+        if (changes.getBio() != null) s.setBio(changes.getBio());
+
+        return repo.save(s);
     }
 }
-}
-
-

@@ -2,7 +2,7 @@ import { useState } from "react";
 import useFetch from "../Hooks/useFetch";
 
 export default function Register() {
-  const { post } = useFetch("http://localhost:8080/student/");
+  const { post } = useFetch("http://localhost:8080/auth/");
   const [formData, setFormData] = useState({
     username: "",
     email: "",
