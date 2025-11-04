@@ -1,5 +1,15 @@
+package main.service;
+
+import main.entity.Student;
+import main.repository.StudentRepo;
+import main.requestDTO.StudentRequest;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.stereotype.Service;
+
 @Service
 public class StudentCommandService {
+
     private final StudentRepo studentRepo;
     private final BCryptPasswordEncoder passwordEncoder;
 
@@ -9,8 +19,7 @@ public class StudentCommandService {
         this.passwordEncoder = new BCryptPasswordEncoder();
     }
 
-    public Student registerStudent(StudentRequest request) {
-
+    public String registerStudent(StudentRequest request) {
         Student student = new Student();
         student.setUsername(request.getUsername());
         student.setEmail(request.getEmail());
@@ -18,6 +27,9 @@ public class StudentCommandService {
         student.setFirstName(request.getFirstName());
         student.setLastName(request.getLastName());
 
-        return studentRepo.save(student);
+        studentRepo.save(student);
+        return "Student registered successfully!";
     }
 }
+
+

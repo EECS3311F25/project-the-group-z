@@ -53,7 +53,7 @@ public class StudentController {
         return service.createStudent(s);
     }
 
-    // finding User via username
+    // Finding user via username
     @GetMapping("/by-username/{username}")
     public Student getByUserName(@PathVariable String username) {
         return service.getStudentByUsername(username)

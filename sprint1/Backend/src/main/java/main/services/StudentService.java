@@ -23,12 +23,12 @@ public class StudentService {
     public StudentDTO toSidebar(Long id) {
         Student s = repo.findById(id)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Student not found"));
-        // Build DTO with the exact order and count your StudentDTO record expects:
+
         return new StudentDTO(
                 s.getStudentNumber(),
                 s.getFirstName(),
                 s.getLastName(),
-                s.getUserName(),
+                s.getUsername(),
                 s.getEmail(),
                 s.getMajor()
         );
@@ -67,7 +67,7 @@ public class StudentService {
         Student s = repo.findById(id)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Student not found"));
 
-        if (changes.getUserName() != null) s.setUserName(changes.getUserName());
+        if (changes.getUsername() != null) s.setUsername(changes.getUsername());
         if (changes.getFirstName() != null) s.setFirstName(changes.getFirstName());
         if (changes.getLastName() != null) s.setLastName(changes.getLastName());
         if (changes.getEmail() != null) s.setEmail(changes.getEmail());
