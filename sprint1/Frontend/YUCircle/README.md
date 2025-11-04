@@ -4,9 +4,19 @@
 
 Make sure to download Node.js: https://nodejs.org/en/download
 
-Once installed, go to your terminal/powershell, ensure it is installed by doing node -V
+Once installed, go to your terminal/powershell, ensure it is installed by using the command:
 
-Install the required packages using npm install
+```
+node -V
+```
 
-Then do npm run dev and you should see it.
+Install the required packages using: 
+```
+npm install
+```
+
+Use this command to get the frontend started: 
+```
+npm run dev
+```
 
