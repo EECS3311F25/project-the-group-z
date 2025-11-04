@@ -1,3 +1,5 @@
+package main;
+
 import jakarta.validation.constraints.*;
 
 public class StudentRequest {

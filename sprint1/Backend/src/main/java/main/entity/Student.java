@@ -25,4 +25,7 @@ public class Student {
     private String lastName;
 
     private String email;
+
+    @ManyToMany(mappedBy = "students")
+    private List<Course> courses;
 }
