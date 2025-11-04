@@ -10,9 +10,16 @@ import org.springframework.stereotype.Service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.server.ResponseStatusException;
 import java.util.UUID;
+import main.entity.Student;
+import main.repository.StudentRepo;
+import main.requestDTO.StudentRequest;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.stereotype.Service;
 
 @Service
 public class StudentCommandService {
+
     private final StudentRepo studentRepo;
     private final BCryptPasswordEncoder passwordEncoder;
     private final EmailService emailService;
@@ -54,7 +61,8 @@ public class StudentCommandService {
         );
 
 
-        return studentRepo.save(student);
+        studentRepo.save(student);
+        return "Student registered successfully!";
     }
 
     public boolean verifyStudent(String token) {
@@ -67,3 +75,6 @@ public class StudentCommandService {
         return true;
     }
 }
+}
+
+

@@ -9,7 +9,7 @@ Deliver MVP for Student Management System with PostgreSQL backend.
 ## 🧭 Scope / Key Features (Epics)
 - Signup for Account
 - Upload Schedule
-- Find Other Students
+- Make a Post
 - Login to Account
 - Email verification
 - User profile
