@@ -1,7 +1,7 @@
 # Release Planning Meeting (RPM)
 
 ## 📅 Date
-October 35, 2025
+October 25, 2025
 
 ## 🎯 Release Goal
 Deliver MVP for Student Management System with PostgreSQL backend.

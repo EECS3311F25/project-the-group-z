@@ -11,18 +11,18 @@ export default function useFetch(baseUrl) {
                 "Content-Type": "application/json"
             },
             body: JSON.stringify(body)
+
         })
-        .then(response => response.json());
+        .then (response => response.json())
     }
 
     function del(url) {
-        return fetch(baseUrl + url, {
-            method: "DELETE",
-        }).then((response) => {
-            return response.json();
-        });
-    }
-
-    return { get, post, del };
+    return fetch(baseUrl + url, {
+        method: "DELETE",
+    }).then((response) => {
+        return response.json();
+    });
 }
 
+    return { get, post, del };
+};

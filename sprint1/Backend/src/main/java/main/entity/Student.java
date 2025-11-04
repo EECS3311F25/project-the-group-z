@@ -22,6 +22,9 @@ public class Student {
     private String lastName;
     private String email;
 
+    private boolean isVerified;
+
+    private String verificationToken;
     private String major;
     private String bio;
 }
