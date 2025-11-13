@@ -5,3 +5,5 @@ Jason: Since last standup, I researched the possibilities of having real-time co
 chat logs in the DB for chat history.
 
 Ejaaj: Since the last standup, I have worked on increased functionality for the User Profile feature. I'm looking to add save features for profile edits, where they are saved onto the database. I have also reasearched the possiblity of adding security features, like TLS/SSL to protect the server from attacks. 
+
+Alice: Since the last standup, I've created an Azure Document Intelligence resource and am planning to use the API to parse uploaded schedules for the upload-schedule feature. No blockages code-wise so far, but when I tried parsing a schedule in Document Intelligence Studio, the AI seemed like it might have trouble mapping some courses to their times.
