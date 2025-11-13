@@ -3,6 +3,8 @@ package main.service;
 import main.dto.StudentDTO;
 import main.entity.Student;
 import main.repository.StudentRepo;
+import main.repository.CourseRepo;
+import main.repository.CourseSessionRepo;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 import org.springframework.http.HttpStatus;
@@ -76,4 +78,61 @@ public class StudentCommandService {
 
         return repo.save(s);
     }
+
+    //TO REVIEW/FIX
+    // This method processes an uploaded schedule image for a student.
+    // It extracts text using OCR, parses it into Course and CourseSession objects,
+    // deduplicates existing courses, saves new ones, and returns a summary result.
+//
+//    public ScheduleProcessingResult processScheduleImage(Long studentId, MultipartFile imageFile) {
+//
+//        // 1. Retrieve the student from the database
+//        Student student = studentRepository.findById(studentId)
+//                .orElseThrow(() -> new EntityNotFoundException("Student not found"));
+//
+//        // TO IMPLEMENT: 2. Extract text from the uploaded image using OCR
+//        String extractedText = ocrService.extractText(imageFile);
+//
+//        // TO IMPLEMENT: 3. Parse the extracted text into structured Course objects
+//        List<Course> parsedCourses = scheduleParser.parseCourses(extractedText);
+//
+//        // 4. Initialize counters and flags
+//        int coursesAdded = 0;
+//        int sessionsAdded = 0;
+//        boolean newCoursesCreated = false;
+//
+//        // 5. Iterate through parsed courses
+//        for (Course course : parsedCourses) {
+//
+//            // Replace this with your deduplication logic:
+//            // If courses are uniquely identified by courseCode + section, use:
+//            Optional<Course> existingCourse = courseRepository.findByCourseCodeAndSection(
+//                    course.getCourseCode(), course.getSection()
+//            );
+//
+//            // 6. Save new course if not found
+//            Course courseToUse = existingCourse.orElseGet(() -> {
+//                newCoursesCreated = true;
+//                coursesAdded++;
+//                return courseRepository.save(course);
+//            });
+//
+//            // 7. Associate the course with the student
+//            student.getCourses().add(courseToUse);
+//
+//            // 8. Save each session under the course
+//            for (CourseSession session : course.getSessions()) {
+//                session.setCourse(courseToUse); // link session to course
+//                courseSessionRepository.save(session); // persist session
+//                sessionsAdded++;
+//            }
+//        }
+//
+//        // 9. Save the updated student with new course associations
+//        studentRepository.save(student);
+//
+//        // 10. Return a result object summarizing what was added
+//        return new ScheduleProcessingResult(newCoursesCreated, coursesAdded, sessionsAdded);
+//    }
+
 }

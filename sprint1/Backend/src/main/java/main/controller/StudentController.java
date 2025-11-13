@@ -7,11 +7,13 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 import org.springframework.http.HttpStatus;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+
 
 @RestController
 @RequestMapping("/api/students")
@@ -72,5 +74,13 @@ public class StudentController {
     @PutMapping("/{id}")
     public Student update(@PathVariable Long id, @RequestBody Student changes) {
         return service.updateStudent(id, changes);
+    }
+
+    // Upload schedule
+    @PostMapping("/{id}/schedule")
+    public ResponseEntity<String> uploadSchedule(@PathVariable Long id, @RequestParam("image") MultipartFile image) {
+        //EDIT
+        // studentCommandService.processScheduleImage(id, image);
+        return ResponseEntity.ok("Schedule processed and saved.");
     }
 }

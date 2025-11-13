@@ -100,6 +100,11 @@
             <version>0.11.5</version>
             <scope>runtime</scope>
         </dependency>
+        <dependency>
+            <groupId>com.azure</groupId>
+            <artifactId>azure-ai-formrecognizer</artifactId>
+            <version>4.1.13</version> <!-- Latest stable version -->
+        </dependency>
 
     </dependencies>
 
