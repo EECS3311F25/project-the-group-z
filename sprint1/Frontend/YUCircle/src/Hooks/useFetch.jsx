@@ -11,18 +11,24 @@ export default function useFetch(baseUrl) {
                 "Content-Type": "application/json"
             },
             body: JSON.stringify(body)
-
         })
-        .then (response => response.json())
+        .then(response => response.json());
+    }
+
+    function put(url, body) {
+        return fetch(baseUrl + url, {
+            method: "PUT",
+            headers: { "Content-Type": "application/json" },
+            body: body ? JSON.stringify(body) : null
+        })
+        .then(response => response.json());
     }
 
     function del(url) {
-    return fetch(baseUrl + url, {
-        method: "DELETE",
-    }).then((response) => {
-        return response.json();
-    });
-}
+        return fetch(baseUrl + url, {
+            method: "DELETE",
+        }).then((response) => response.json());
+    }
 
-    return { get, post, del };
+    return { get, post, put, del };
 };
