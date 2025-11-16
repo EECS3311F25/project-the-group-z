@@ -4,7 +4,6 @@ import jakarta.persistence.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.AllArgsConstructor;
-import java.time.DayOfWeek;
 import java.time.LocalTime;
 @Entity
 @Table(name = "course_session")
@@ -20,8 +19,20 @@ public class CourseSession {
     @JoinColumn(name = "course_id")
     private Course course;
 
-    private DayOfWeek day;
+    private String type;
+    private String day;
     private LocalTime startTime;
     private LocalTime endTime;
     private String room;
+
+    // Constructor without id (for new entities)
+    public CourseSession(Course course, String type, String day, LocalTime startTime, LocalTime endTime,
+                         String room) {
+        this.course = course;
+        this.type = type;
+        this.day = day;
+        this.startTime = startTime;
+        this.endTime = endTime;
+        this.room = room;
+    }
 }

@@ -1,7 +1,9 @@
 package main.entity;
 
 import jakarta.persistence.*;
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.AllArgsConstructor;
 
@@ -12,11 +14,14 @@ import java.util.Set;
 
 @Entity
 @Table(name = "student")
-@Data // Automatically adds getters, setters, toString, equals, hashCode
+@Getter
+@Setter
 @NoArgsConstructor // Adds a no-argument constructor (required by JPA)
 @AllArgsConstructor // Adds a constructor with all fields
+@EqualsAndHashCode(onlyExplicitlyIncluded = true)
 public class Student {
 
+    @EqualsAndHashCode.Include
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long studentNumber;

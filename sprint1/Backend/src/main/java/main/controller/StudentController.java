@@ -8,11 +8,13 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.beans.factory.annotation.Value;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.Arrays;
 
 
 @RestController
@@ -21,6 +23,12 @@ import java.util.Optional;
 public class StudentController {
 
     private final StudentCommandService service;
+
+    // For uploadSchedule validation
+    @Value("${upload.max-size}")
+    private long maxSize;  // // Current limit: 4 MB (https://learn.microsoft.com/en-us/azure/ai-services/document-intelligence/prebuilt/layout?view=doc-intel-4.0.0&tabs=rest%2Csample-code#input-requirements)
+    @Value("${upload.allowed-types}")
+    private String[] allowedTypes;
 
     public StudentController(StudentCommandService service) {
         this.service = service;
@@ -78,9 +86,33 @@ public class StudentController {
 
     // Upload schedule
     @PostMapping("/{id}/schedule")
-    public ResponseEntity<String> uploadSchedule(@PathVariable Long id, @RequestParam("image") MultipartFile image) {
-        //EDIT
-        // studentCommandService.processScheduleImage(id, image);
+    public ResponseEntity<String> uploadSchedule(@PathVariable Long id, @RequestParam("file") MultipartFile file) {
+        // To check uploaded file properties
+        System.out.println("Received file contentType=" + file.getContentType() + ", size=" + file.getSize());
+
+        // Check if file is empty
+        if (file.isEmpty()) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "No file uploaded");
+        }
+
+        // Check the file type
+        String contentType = file.getContentType();
+        if (contentType == null) {
+            throw new ResponseStatusException(HttpStatus.UNSUPPORTED_MEDIA_TYPE,
+                    "File type could not be determined");
+        }
+        if (!Arrays.asList(allowedTypes).contains(contentType)) {
+            throw new ResponseStatusException(HttpStatus.UNSUPPORTED_MEDIA_TYPE,
+                    "Only " + String.join(", ", allowedTypes) + " files are supported");
+        }
+
+        // Check file size
+        if (file.getSize() > maxSize) {
+            throw new ResponseStatusException(HttpStatus.PAYLOAD_TOO_LARGE,
+                    "File size exceeds " + (maxSize / (1024 * 1024)) + " MB limit");
+        }
+
+        service.uploadSchedule(id, file);
         return ResponseEntity.ok("Schedule processed and saved.");
     }
 }

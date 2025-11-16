@@ -1,13 +1,20 @@
 package main.service;
 
 import main.dto.StudentDTO;
+import main.dto.ParsedScheduleDTO;
 import main.entity.Student;
+import main.entity.Course;
+import main.entity.CourseSession;
 import main.repository.StudentRepo;
 import main.repository.CourseRepo;
 import main.repository.CourseSessionRepo;
+import main.service.AzureOcrService;
+import main.mapper.ScheduleMapper;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 import org.springframework.http.HttpStatus;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
@@ -16,9 +23,16 @@ import java.util.Optional;
 public class StudentCommandService {
 
     private final StudentRepo repo;
+    private final CourseRepo courseRepo;
+    private final CourseSessionRepo sessionRepo;
+    private final AzureOcrService ocrService;
 
-    public StudentCommandService(StudentRepo repo) {
+    public StudentCommandService(StudentRepo repo, CourseRepo courseRepo,
+                                 CourseSessionRepo sessionRepo, AzureOcrService ocrService) {
         this.repo = repo;
+        this.courseRepo = courseRepo;
+        this.sessionRepo = sessionRepo;
+        this.ocrService = ocrService;
     }
 
     // Convert to sidebar DTO (minimal data)
@@ -79,60 +93,50 @@ public class StudentCommandService {
         return repo.save(s);
     }
 
-    //TO REVIEW/FIX
-    // This method processes an uploaded schedule image for a student.
-    // It extracts text using OCR, parses it into Course and CourseSession objects,
-    // deduplicates existing courses, saves new ones, and returns a summary result.
-//
-//    public ScheduleProcessingResult processScheduleImage(Long studentId, MultipartFile imageFile) {
-//
-//        // 1. Retrieve the student from the database
-//        Student student = studentRepository.findById(studentId)
-//                .orElseThrow(() -> new EntityNotFoundException("Student not found"));
-//
-//        // TO IMPLEMENT: 2. Extract text from the uploaded image using OCR
-//        String extractedText = ocrService.extractText(imageFile);
-//
-//        // TO IMPLEMENT: 3. Parse the extracted text into structured Course objects
-//        List<Course> parsedCourses = scheduleParser.parseCourses(extractedText);
-//
-//        // 4. Initialize counters and flags
-//        int coursesAdded = 0;
-//        int sessionsAdded = 0;
-//        boolean newCoursesCreated = false;
-//
-//        // 5. Iterate through parsed courses
-//        for (Course course : parsedCourses) {
-//
-//            // Replace this with your deduplication logic:
-//            // If courses are uniquely identified by courseCode + section, use:
-//            Optional<Course> existingCourse = courseRepository.findByCourseCodeAndSection(
-//                    course.getCourseCode(), course.getSection()
-//            );
-//
-//            // 6. Save new course if not found
-//            Course courseToUse = existingCourse.orElseGet(() -> {
-//                newCoursesCreated = true;
-//                coursesAdded++;
-//                return courseRepository.save(course);
-//            });
-//
-//            // 7. Associate the course with the student
-//            student.getCourses().add(courseToUse);
-//
-//            // 8. Save each session under the course
-//            for (CourseSession session : course.getSessions()) {
-//                session.setCourse(courseToUse); // link session to course
-//                courseSessionRepository.save(session); // persist session
-//                sessionsAdded++;
-//            }
-//        }
-//
-//        // 9. Save the updated student with new course associations
-//        studentRepository.save(student);
-//
-//        // 10. Return a result object summarizing what was added
-//        return new ScheduleProcessingResult(newCoursesCreated, coursesAdded, sessionsAdded);
-//    }
+    @Transactional
+    public void uploadSchedule(Long studentId, MultipartFile file) {
+        // Get Azure Document Intelligence to parse the file into DTOs
+        try {
+            List<ParsedScheduleDTO> parsed = ocrService.extractScheduleFromFile(file);
+
+            // Find the student who uploaded the schedule
+            Student student = repo.findById(studentId)
+                    .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Student not found"));
+
+            // Iterate through DTOs
+            for (ParsedScheduleDTO dto : parsed) {
+                // Get the course if it already exists in the database
+                Course course = courseRepo.findByCourseCodeAndCourseSection(dto.courseCode(), dto.section())
+                        .orElseGet(() -> {
+                            // If not found, create a new Course entity
+                            Course newCourse = ScheduleMapper.toCourse(dto);
+                            // Persist the new course
+                            return courseRepo.save(newCourse);
+                        });
+
+                // Link the course to the student and vice versa
+                course.getStudents().add(student);
+                student.getCourses().add(course);
+
+                // Check if the session already exists
+                boolean exists = sessionRepo.existsByCourseAndDayAndStartTime(course, dto.day(), dto.startTime());
+                if (!exists) {
+                    // Create a new CourseSession entity
+                    CourseSession session = ScheduleMapper.toSession(dto, course);
+
+                    // Link the session to its associated course and vice versa
+                    session.setCourse(course);
+                    course.getSessions().add(session);
+
+                    // Persist the new session
+                    sessionRepo.save(session);
+                }
+            }
+            // Persist the updated student with course link
+            repo.save(student);
+        } catch (Exception e) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Failed to process schedule file", e);
+        }
+    }
 
 }
