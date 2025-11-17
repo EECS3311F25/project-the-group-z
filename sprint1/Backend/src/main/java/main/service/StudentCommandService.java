@@ -94,13 +94,13 @@ public class StudentCommandService {
     }
 
     @Transactional
-    public void uploadSchedule(Long studentId, MultipartFile file) {
+    public void uploadSchedule(String username, MultipartFile file) {
         // Get Azure Document Intelligence to parse the file into DTOs
         try {
             List<ParsedScheduleDTO> parsed = ocrService.extractScheduleFromFile(file);
 
             // Find the student who uploaded the schedule
-            Student student = repo.findById(studentId)
+            Student student = repo.findByUsername(username)
                     .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Student not found"));
 
             // Iterate through DTOs

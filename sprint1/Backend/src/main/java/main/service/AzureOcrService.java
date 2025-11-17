@@ -75,23 +75,22 @@ public class AzureOcrService {
 
         List<ParsedScheduleDTO> parsed = new ArrayList<>();
 
-        // EDIT comments
-        // 1. First pass: Extract times from column 0 for all tables
+        // Extract times from column 0 for all tables
         Map<Integer, TimeRange> timeMap = extractTimeRanges(result);
 
-        // 2. Process each table
+        // Process each table
         for (DocumentTable table : result.getTables()) {
 
-            // group cells by column
+            // Group cells by column
             Map<Integer, List<DocumentTableCell>> columns = groupByColumn(table.getCells());
 
-            // now handle each column except column 0
+            // Process each column except column 0
             for (Map.Entry<Integer, List<DocumentTableCell>> entry : columns.entrySet()) {
                 int col = entry.getKey();
                 List<DocumentTableCell> cells = entry.getValue();
 
                 if (col == 0) {
-                    continue; // skip times column
+                    continue; // Skip column 0 (which has the times)
                 }
 
                 String day = inferDayFromColumn(col);
@@ -99,7 +98,7 @@ public class AzureOcrService {
                     continue;
                 }
 
-                // sort cells by row index so parsing is top-down
+                // Sort cells by row index so parsing is top-down
                 cells.sort(Comparator.comparingInt(DocumentTableCell::getRowIndex));
 
                 CourseBlock block = null;
@@ -113,28 +112,28 @@ public class AzureOcrService {
                         continue;
                     }
 
-                    // 3. Detect start of a block by course code
+                    // Detect start of a block (i.e. group of course info) by course code
                     Matcher courseMatch = COURSE_PATTERN.matcher(text);
                     if (courseMatch.find()) {
-                        // finalize previous block if all its attributes are collected
+                        // Finalize previous block if all its attributes are collected
                         if (block != null) {
                             finalizeBlock(block, timeMap, parsed);
                         }
 
-                        // start new block
+                        // Start new block
                         block = new CourseBlock();
                         block.courseCode = courseMatch.group();
                         block.day = day;
                         block.row = row;
 
-                        // capture startTime
+                        // Capture startTime
                         TimeRange t = timeMap.get(row);
                         if (t != null) {
                             block.startTime = t.start();
                         }
                     }
 
-                    // 4. Attribute lines inside a block
+                    // Find attributes for a block
                     if (block != null) {
                         Matcher sec = SECTION_PATTERN.matcher(text);
                         if (sec.find()) {
@@ -145,7 +144,7 @@ public class AzureOcrService {
                         if (type.find()) {
                             block.type = type.group(1);
 
-                            // capture endTime only after type is detected
+                            // Capture endTime only after type is detected
                             TimeRange t = timeMap.get(row);
                             if (t != null) {
                                 block.endTime = t.end();
@@ -159,7 +158,7 @@ public class AzureOcrService {
                     }
                 }
 
-                // finalize last block in column
+                // Finalize last block in column
                 if (block != null) {
                     finalizeBlock(block, timeMap, parsed);
                 }
@@ -298,7 +297,7 @@ public class AzureOcrService {
         String day;
         LocalTime startTime;
         LocalTime endTime;
-        int row; // row where course code was detected
+        int row; // Row where course code was detected
 
         boolean isComplete() {
             return courseCode != null &&

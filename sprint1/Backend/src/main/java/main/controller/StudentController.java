@@ -85,9 +85,10 @@ public class StudentController {
     }
 
     // Upload schedule
-    @PostMapping("/{id}/schedule")
-    public ResponseEntity<String> uploadSchedule(@PathVariable Long id, @RequestParam("file") MultipartFile file) {
-        // To check uploaded file properties
+    @PostMapping("/{username}/schedule")
+    public ResponseEntity<Map<String, String>> uploadSchedule(@PathVariable String username, @RequestParam("file") MultipartFile file) {
+        // Check uploaded file properties
+        System.out.println("Upload endpoint triggered for username=" + username);
         System.out.println("Received file contentType=" + file.getContentType() + ", size=" + file.getSize());
 
         // Check if file is empty
@@ -112,7 +113,10 @@ public class StudentController {
                     "File size exceeds " + (maxSize / (1024 * 1024)) + " MB limit");
         }
 
-        service.uploadSchedule(id, file);
-        return ResponseEntity.ok("Schedule processed and saved.");
+        // Upload and parse schedule for the user with the given username
+        service.uploadSchedule(username, file);
+        Map<String, String> body = new HashMap<>();
+        body.put("message", "Schedule processed and saved.");
+        return ResponseEntity.ok(body);
     }
 }
