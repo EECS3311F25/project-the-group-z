@@ -73,7 +73,7 @@ public class StudentController {
         return service.updateStudent(id, changes);
     }
 
-    // --- PATCH endpoint to update specific fields via username ---
+    // PATCH endpoint to update specific fields via username
     @PatchMapping("/update/{username}")
     public ResponseEntity<?> updateFields(
             @PathVariable String username,
@@ -96,6 +96,13 @@ public class StudentController {
                 case "lastName" -> student.setLastName(value);
                 case "major" -> student.setMajor(value);
                 case "bio" -> student.setBio(value);
+                case "newPassword" -> {
+                    String current = updates.get("currentPassword");
+                    if (current == null || !service.checkPassword(student, current)) {
+                        throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Current password incorrect");
+                    }
+                    service.updatePassword(student, value);
+                }
                 // username & email NOT allowed
             }
         });

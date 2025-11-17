@@ -15,6 +15,15 @@ export default function UserProfile() {
     bio: "",
   });
 
+  const [passwordValues, setPasswordValues] = useState({
+    currentPassword: "",
+    newPassword: "",
+    confirmPassword: "",
+  });
+  const [resettingPassword, setResettingPassword] = useState(false);
+  const [passwordMessage, setPasswordMessage] = useState(null);
+  
+
   const [saving, setSaving] = useState(false);
   const [message, setMessage] = useState(null);
 
@@ -59,6 +68,37 @@ export default function UserProfile() {
 
     setSaving(false);
   }
+
+  async function handleResetPassword() {
+    const { currentPassword, newPassword, confirmPassword } = passwordValues;
+  
+    if (!currentPassword || !newPassword || !confirmPassword) {
+      setPasswordMessage("Please fill all fields.");
+      return;
+    }
+  
+    if (newPassword !== confirmPassword) {
+      setPasswordMessage("New passwords do not match.");
+      return;
+    }
+  
+    setResettingPassword(true);
+    setPasswordMessage(null);
+  
+    try {
+      await patch(`update/${username}`, {
+        currentPassword,
+        newPassword,
+      });
+      setPasswordMessage("Password updated successfully!");
+      setPasswordValues({ currentPassword: "", newPassword: "", confirmPassword: "" });
+    } catch (err) {
+      setPasswordMessage("Error updating password.");
+    }
+  
+    setResettingPassword(false);
+  }
+  
 
   // Generic editable field renderer
   function renderEditableField(label, field) {
@@ -233,6 +273,51 @@ export default function UserProfile() {
             <p className="text-xs text-white/80 mt-3">{message}</p>
           )}
         </div>
+        <div className="mt-6">
+        <h3 className="text-sm font-semibold mb-2 text-white/90">Reset Password</h3>
+          <input
+            type="password"
+            placeholder="Current Password"
+            value={passwordValues.currentPassword}
+            onChange={(e) =>
+            setPasswordValues((prev) => ({ ...prev, currentPassword: e.target.value }))
+          }
+          className="w-full p-2 rounded mb-2 text-black"
+          />
+
+          <input
+            type="password"
+            placeholder="New Password"
+            value={passwordValues.newPassword}
+            onChange={(e) =>
+            setPasswordValues((prev) => ({ ...prev, newPassword: e.target.value }))
+          }
+          className="w-full p-2 rounded mb-2 text-black"
+            />
+
+  <input
+    type="password"
+    placeholder="Confirm New Password"
+    value={passwordValues.confirmPassword}
+    onChange={(e) =>
+      setPasswordValues((prev) => ({ ...prev, confirmPassword: e.target.value }))
+    }
+    className="w-full p-2 rounded mb-2 text-black"
+  />
+
+  <button
+    onClick={handleResetPassword}
+    disabled={resettingPassword}
+    className="bg-white text-black px-3 py-1 rounded"
+  >
+    {resettingPassword ? "Updating..." : "Reset Password"}
+  </button>
+
+  {passwordMessage && (
+    <p className="text-xs text-white/80 mt-2">{passwordMessage}</p>
+  )}
+</div>
+
       </aside>
 
       {/* MAIN */}
