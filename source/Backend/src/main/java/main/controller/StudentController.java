@@ -67,10 +67,44 @@ public class StudentController {
         }
     }
 
-
     // Updating info
     @PutMapping("/{id}")
     public Student update(@PathVariable Long id, @RequestBody Student changes) {
         return service.updateStudent(id, changes);
     }
+
+    // --- PATCH endpoint to update specific fields via username ---
+    @PatchMapping("/update/{username}")
+    public ResponseEntity<?> updateFields(
+            @PathVariable String username,
+            @RequestBody Map<String, String> updates) {
+    
+        Optional<Student> studentOpt = service.getStudentByUsername(username);
+        if (studentOpt.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body(Map.of("message", "Student not found"));
+        }
+    
+        Student student = studentOpt.get();
+    
+        // Apply allowed updates
+        updates.forEach((key, value) -> {
+            if (value == null) return;
+    
+            switch (key) {
+                case "firstName" -> student.setFirstName(value);
+                case "lastName" -> student.setLastName(value);
+                case "major" -> student.setMajor(value);
+                case "bio" -> student.setBio(value);
+                // username & email NOT allowed
+            }
+        });
+    
+        // DIRECT SAVE — do NOT call updateStudent()
+        Student saved = service.saveDirect(student);
+    
+        return ResponseEntity.ok(saved);
+    }
+    
 }
+ 

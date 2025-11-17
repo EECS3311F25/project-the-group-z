@@ -76,4 +76,8 @@ public class StudentCommandService {
 
         return repo.save(s);
     }
+    public Student saveDirect(Student s) {
+        return repo.save(s);
+    }
+    
 }
