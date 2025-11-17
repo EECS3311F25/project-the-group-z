@@ -1,6 +1,7 @@
 package main.controller;
 
 import main.dto.StudentDTO;
+import main.dto.ParsedScheduleDTO;
 import main.entity.Student;
 import main.service.StudentCommandService;
 import org.springframework.http.ResponseEntity;
@@ -86,9 +87,11 @@ public class StudentController {
 
     // Upload schedule
     @PostMapping("/{username}/schedule")
-    public ResponseEntity<Map<String, String>> uploadSchedule(@PathVariable String username, @RequestParam("file") MultipartFile file) {
-        // Check uploaded file properties
+    public ResponseEntity<List<ParsedScheduleDTO>> uploadSchedule(@PathVariable String username, @RequestParam("file") MultipartFile file) {
+        // Print out passed in username
         System.out.println("Upload endpoint triggered for username=" + username);
+
+        // Check uploaded file properties
         System.out.println("Received file contentType=" + file.getContentType() + ", size=" + file.getSize());
 
         // Check if file is empty
@@ -114,9 +117,7 @@ public class StudentController {
         }
 
         // Upload and parse schedule for the user with the given username
-        service.uploadSchedule(username, file);
-        Map<String, String> body = new HashMap<>();
-        body.put("message", "Schedule processed and saved.");
-        return ResponseEntity.ok(body);
+        List<ParsedScheduleDTO> parsed = service.uploadSchedule(username, file);
+        return ResponseEntity.ok(parsed);
     }
 }

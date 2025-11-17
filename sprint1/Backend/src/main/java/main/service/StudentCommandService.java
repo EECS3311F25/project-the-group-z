@@ -94,7 +94,7 @@ public class StudentCommandService {
     }
 
     @Transactional
-    public void uploadSchedule(String username, MultipartFile file) {
+    public List<ParsedScheduleDTO> uploadSchedule(String username, MultipartFile file) {
         // Get Azure Document Intelligence to parse the file into DTOs
         try {
             List<ParsedScheduleDTO> parsed = ocrService.extractScheduleFromFile(file);
@@ -134,6 +134,11 @@ public class StudentCommandService {
             }
             // Persist the updated student with course link
             repo.save(student);
+
+            // Print parsed info in terminal
+            System.out.println("Parsed schedule entries:");
+            parsed.forEach(dto -> System.out.println(dto));
+            return parsed;
         } catch (Exception e) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Failed to process schedule file", e);
         }

@@ -122,7 +122,7 @@ public class AzureOcrService {
 
                         // Start new block
                         block = new CourseBlock();
-                        block.courseCode = courseMatch.group();
+                        block.courseCode = normalizeCourseCode(courseMatch.group());
                         block.day = day;
                         block.row = row;
 
@@ -195,6 +195,14 @@ public class AzureOcrService {
         return text.replaceAll("[\\r\\n]+", " ")
                 .replaceAll("\\s{2,}", " ")
                 .trim();
+    }
+
+    private static String normalizeCourseCode(String raw) {
+        if (raw == null) return null;
+        return raw.trim()
+                .toUpperCase()
+                .replaceAll("\\s+", "")   // remove spaces
+                .replaceAll("-", "");     // remove dashes
     }
 
     /**
