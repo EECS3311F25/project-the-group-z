@@ -106,6 +106,7 @@ export default function UserProfile() {
   // Save bio (currently local)
   function handleSaveBio() {
     setSavingBio(true);
+    setBioMessage(null);
     setStudent(prev => ({ ...prev, bio }));
     setBioMessage("Bio saved locally.");
     setEditingBio(false);
@@ -113,34 +114,46 @@ export default function UserProfile() {
     setTimeout(() => setBioMessage(null), 3000);
   }
 
-  if (!student) return <p className="text-white p-4">Loading profile...</p>;
+  if (!student) return <p className="text-white p-4">No student data..</p>;
 
   return (
-    <div className="min-h-screen flex gap-6 p-8 text-white">
-      {/* Sidebar / Profile Info */}
-      <aside
-        className="max-w-sm w-full rounded shadow-md"
-        style={{ backgroundColor: "var(--yorku-red, #B31B1B)" }}
-      >
+        <div className="min-h-screen flex gap-6 p-8 text-white">
+      <aside className="max-w-sm w-full rounded shadow-md" style={{ backgroundColor: "var(--yorku-red, #B31B1B)" }}>
         <div className="p-6">
           <h2 className="text-2xl font-bold mb-2">Your Profile</h2>
           <p className="text-sm opacity-90 mb-4">
-            Welcome back, <span className="font-semibold">{student.firstName} {student.lastName}</span>
+            Welcome back, <span className="font-semibold">{student.firstName + " " + student.lastName}</span>
           </p>
 
           <div className="space-y-2 mb-4">
-            <div><div className="text-xs text-white/80">Email</div><div>{student.email}</div></div>
-            <div><div className="text-xs text-white/80">Major</div><div>{student.major || "Not set"}</div></div>
+            <div>
+              <div className="text-xs text-white/80">First name</div>
+              <div className="font-medium">{student.firstName}</div>
+            </div>
+            <div>
+              <div className="text-xs text-white/80">Last name</div>
+              <div className="font-medium">{student.lastName}</div>
+            </div>
+            <div>
+              <div className="text-xs text-white/80">Email</div>
+              <div className="font-medium">{student.email}</div>
+            </div>
+            <div>
+              <div className="text-xs text-white/80">Major</div>
+              <div className="font-medium">{student.major === null ? "We don't know your major yet." : student.major}</div>
+            </div>
           </div>
 
           <div className="mt-4">
             <div className="flex items-center justify-between mb-2">
               <div className="text-xs text-white/80">Bio</div>
-              {!editingBio ? (
-                <button onClick={() => setEditingBio(true)} className="text-sm underline">Edit</button>
-              ) : (
-                <button onClick={() => { setEditingBio(false); setBio(student.bio ?? ""); }} className="text-sm underline">Cancel</button>
-              )}
+              <div>
+                {!editingBio ? (
+                  <button onClick={() => setEditingBio(true)} className="text-sm underline underline-offset-2">Edit</button>
+                ) : (
+                  <button onClick={() => { setEditingBio(false); setBio(student.bio ?? ""); }} className="text-sm underline underline-offset-2">Cancel</button>
+                )}
+              </div>
             </div>
 
             {!editingBio ? (
@@ -156,10 +169,12 @@ export default function UserProfile() {
                   className="w-full p-2 rounded text-black"
                   placeholder="Tell people about yourself..."
                 />
-                <button onClick={handleSaveBio} disabled={savingBio} className="bg-white text-black px-3 py-1 rounded">
-                  {savingBio ? "Saving..." : "Save"}
-                </button>
-                {bioMessage && <div className="text-sm text-white/80 mt-2">{bioMessage}</div>}
+                <div className="flex items-center gap-2">
+                  <button onClick={handleSaveBio} disabled={savingBio} className="bg-white text-black px-3 py-1 rounded">
+                    {savingBio ? "Saving..." : "Save"}
+                  </button>
+                  {bioMessage && <div className="text-sm text-white/80 ml-3">{bioMessage}</div>}
+                </div>
               </div>
             )}
           </div>
