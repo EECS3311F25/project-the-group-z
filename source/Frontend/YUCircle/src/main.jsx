@@ -1,15 +1,16 @@
-import { StrictMode } from 'react'
-import { createRoot } from 'react-dom/client'
-import './index.css'
-import Sidebar from './Components/Sidebar'
-import Register from "./Pages/Register"
-import Login from "./Pages/Login"
-import { BrowserRouter, Routes, Route } from "react-router-dom"
-import Landing from "./Pages/Landing"
-import MakePost from "./Pages/MakePost"
-import UserProfile from "./Pages/UserProfile"
+import { StrictMode } from "react";
+import { createRoot } from "react-dom/client";
+import "./index.css";
+import Sidebar from "./Components/Sidebar";
+import Register from "./Pages/Register";
+import Login from "./Pages/Login";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
+import Landing from "./Pages/Landing";
+import MakePost from "./Pages/MakePost";
+import UserProfile from "./Pages/UserProfile";
+import UserSearch from "./Pages/UserSearch";
 
-createRoot(document.getElementById('root')).render(
+createRoot(document.getElementById("root")).render(
   <StrictMode>
     <BrowserRouter>
       <div className="flex">
@@ -21,9 +22,10 @@ createRoot(document.getElementById('root')).render(
             <Route path="/login" element={<Login />} />
             <Route path="/make-post" element={<MakePost />} />
             <Route path="/profile" element={<UserProfile />} />
+            <Route path="/userSearch" element={<UserSearch />} />
           </Routes>
         </div>
       </div>
     </BrowserRouter>
-  </StrictMode>,
-)
+  </StrictMode>
+);

@@ -1,0 +1,120 @@
+body {
+  margin: 50px;
+}
+
+form {
+  border: 10px solid dark gray;
+  margin: 20px 0px;
+}
+
+form input {
+  width: 35%;
+  border-radius: 2%;
+  border: 1px solid gray;
+  font-size: 25px;
+  text-indent: 15px;
+  padding: 15px;
+}
+
+#submit-search {
+  width: 10%;
+  border-radius: 10%;
+}
+
+#submit-search:hover {
+  cursor: pointer;
+}
+
+#results-box {
+  /* border: 5px solid blue; */
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: flex-start;
+  width: 50%;
+  /* TODO remove this padding later */
+  padding: 10px 0px;
+}
+
+#result {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: flex-start;
+  border: 2px solid black;
+  border-radius: 1%;
+  margin: 0px 0px 15px 0px;
+
+  /* temp below */
+  width: 95%;
+  padding: 10px;
+}
+
+#result-left-side {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: flex-start;
+  /* border: 2px solid orange; */
+  width: 80%;
+  /* temp below */
+  /* height: 25px; */
+  /* justify-content: left; */
+}
+
+#result-right-side {
+  /* border: 2px solid pink; */
+  /* temp below */
+  width: 20%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+}
+
+#result-student-pfp {
+  /* border-radius: 50%; */
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  /* border: 2px solid green; */
+  overflow: hidden;
+  /* margin: 20px; */
+  width: 20%;
+  height: 100%;
+}
+
+#result-student-pfp img {
+  width: 100px;
+  height: 100px;
+  overflow: hidden;
+  /* border: 10px solid brown; */
+  border-radius: 50%;
+}
+
+#result-student-info {
+  width: 75%;
+  height: 100%;
+  /* border: 1px solid purple; */
+}
+
+.result-button {
+  height: 100%;
+  width: 100%;
+  background-color: white;
+  border: hidden;
+  overflow: hidden;
+}
+
+.result-button a {
+  text-decoration: none;
+  color: black;
+}
+
+#friend-req-button:hover {
+  cursor: pointer;
+}
+
+#result-right-side img {
+  height: 100%;
+  width: 100%;
+}
