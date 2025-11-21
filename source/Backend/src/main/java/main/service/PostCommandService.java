@@ -17,53 +17,52 @@ public class PostCommandService {
 
     @Autowired
     private PostRepo postRepo;
-    
+
     @Autowired
-    private LikeRepo LikeRepo;
+    private LikeRepo likeRepo;
 
     @Autowired
     private CommentRepo commentRepo;
 
-  
     public Post createPost(Post post) {
         return postRepo.save(post);
     }
 
     public List<Post> getAllPosts() {
-        // newest first
-        return postRepo.findAll().stream()
-                .sorted((p1, p2) -> p2.getTimestamp().compareTo(p1.getTimestamp()))
-                .toList();
+        return postRepo.findAllByOrderByTimestampDesc();
     }
 
-    //Like a post
+    // 🔥 NEW — Get posts for a specific user
+    public List<Post> getPostsByUser(String username) {
+        return postRepo.findByUsernameOrderByTimestampDesc(username);
+    }
+
+    // Like/unlike a post
     public Post toggleLike(Long postId, String username) {
         Post post = postRepo.findById(postId)
                 .orElseThrow(() -> new RuntimeException("Post not found"));
 
-        // Check if user already liked
-        Optional<Like> existing = LikeRepo.findByPostAndUsername(post, username);
+        Optional<Like> existing = likeRepo.findByPostAndUsername(post, username);
 
         if (existing.isPresent()) {
-            // Unlike
-            LikeRepo.delete(existing.get());
+            likeRepo.delete(existing.get());
             post.setLikes(post.getLikes() - 1);
         } else {
-            // Like
             Like like = new Like();
             like.setPost(post);
             like.setUsername(username);
-            LikeRepo.save(like);
+            likeRepo.save(like);
             post.setLikes(post.getLikes() + 1);
         }
 
         return postRepo.save(post);
     }
 
-    //Add a comment to a post
+    // Add comment
     public Comment addComment(Long postId, Comment comment) {
         Post post = postRepo.findById(postId)
                 .orElseThrow(() -> new RuntimeException("Post not found"));
+
         comment.setPost(post);
         return commentRepo.save(comment);
     }
