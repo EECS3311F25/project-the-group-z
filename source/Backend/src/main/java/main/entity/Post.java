@@ -1,11 +1,9 @@
 package main.entity;
 
+import jakarta.persistence.*;
 import java.time.LocalDateTime;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Table(name = "posts")
@@ -18,12 +16,16 @@ public class Post {
     private String username;
     private String content;
     private String imageUrl;
+
+    private int likes = 0;
+
     private LocalDateTime timestamp = LocalDateTime.now();
 
-    // ---- NO-ARG CONSTRUCTOR ----
+    @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Comment> comments = new ArrayList<>();
+
     public Post() {}
 
-    // ---- ALL-ARG CONSTRUCTOR ----
     public Post(Long id, String username, String content, String imageUrl, LocalDateTime timestamp) {
         this.id = id;
         this.username = username;
@@ -32,7 +34,8 @@ public class Post {
         this.timestamp = timestamp;
     }
 
-    // ---- GETTERS & SETTERS ----
+    // Getters & Setters
+
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }
 
@@ -45,6 +48,12 @@ public class Post {
     public String getImageUrl() { return imageUrl; }
     public void setImageUrl(String imageUrl) { this.imageUrl = imageUrl; }
 
+    public int getLikes() { return likes; }
+    public void setLikes(int likes) { this.likes = likes; }
+
     public LocalDateTime getTimestamp() { return timestamp; }
     public void setTimestamp(LocalDateTime timestamp) { this.timestamp = timestamp; }
+
+    public List<Comment> getComments() { return comments; }
+    public void setComments(List<Comment> comments) { this.comments = comments; }
 }
